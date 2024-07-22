@@ -3,7 +3,12 @@ import ReactDOM from "react-dom/client";
 import Header from "./components/Header";
 import Body from "./components/Body";
 import Footer from "./components/Footer";
-import { createBrowserRouter, RouterProvider } from "react-router-dom"; // to configure routes for our app
+import About from "./components/About";
+import Contact from "./components/Contact";
+import Profile from "./components/Profile";
+import Error from "./components/Error";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom"; // to configure routes for our app
+import RestaurantDetails from "./components/RestaurantDetails";
 
 /**
  * Header (Navbar)
@@ -31,7 +36,7 @@ const AppLayout = () => {
   return (
     <>
       <Header />
-      <Body />
+      <Outlet />
       <Footer />
     </>
   );
@@ -42,14 +47,31 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <AppLayout />,
-  },
-  {
-    path: "/about",
-    element: <About />,
-  },
-  {
-    path: "/contact",
-    element: <Contact />,
+    errorElement: <Error />,
+    children: [
+      {
+        path: "/",
+        element: <Body />,
+      },
+      {
+        path: "about",
+        element: <About />,
+        children: [
+          {
+            path: "profile",
+            element: <Profile />,
+          },
+        ],
+      },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+      {
+        path: "restaurant/:resId",
+        element: <RestaurantDetails />,
+      },
+    ],
   },
 ]);
 

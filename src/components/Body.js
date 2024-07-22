@@ -1,6 +1,7 @@
 import RestaurantCard from "./RestaurantCard";
 import { useState, useEffect } from "react";
 import Shimmer from "./ShimmerUI";
+import { FETCH_RESTAURANTS_LIST_URL } from "../constants";
 
 // filter the restaurants to find one matching the 'searchInput'
 function filterData(searchInput, restaurants) {
@@ -17,11 +18,9 @@ const Body = () => {
   const [viewRestaurants, setViewRestaurants] = useState([]);
   const [allRestaurants, setAllRestaurants] = useState([]);
 
-  // executes callback func. only once after initial render (here, fetching restaurant data from Swiggy public API)
+  // executes callback func. only once after initial render (here, fetching restaurants data from Swiggy public API)
   useEffect(() => {
-    getData(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=17.37240&lng=78.43780&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-    );
+    getData(FETCH_RESTAURANTS_LIST_URL);
   }, []);
 
   // func to fetch data from given URL
@@ -100,6 +99,7 @@ const Body = () => {
             viewRestaurants.map((restaurant) => {
               return (
                 <RestaurantCard
+                  id={restaurant.id}
                   name={restaurant.name}
                   imageId={restaurant.cloudinaryImageId}
                   cuisines={restaurant.cuisines}
