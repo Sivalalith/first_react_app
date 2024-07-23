@@ -1,7 +1,7 @@
 import RestaurantCard from "./RestaurantCard";
-import { useState, useEffect } from "react";
 import Shimmer from "./ShimmerUI";
-import { FETCH_RESTAURANTS_LIST_URL } from "../constants";
+import useRestaurantsList from "../utils/useRestaurantsList";
+import useOnline from "../utils/useOnline";
 
 // filter the restaurants to find one matching the 'searchInput'
 function filterData(searchInput, restaurants) {
@@ -13,30 +13,18 @@ function filterData(searchInput, restaurants) {
 
 // Body component
 const Body = () => {
-  // local state variables to hold data between renders
-  const [searchText, setSearchText] = useState("");
-  const [viewRestaurants, setViewRestaurants] = useState([]);
-  const [allRestaurants, setAllRestaurants] = useState([]);
+  const [
+    searchText,
+    setSearchText,
+    allRestaurants,
+    viewRestaurants,
+    setViewRestaurants,
+  ] = useRestaurantsList();
 
-  // executes callback func. only once after initial render (here, fetching restaurants data from Swiggy public API)
-  useEffect(() => {
-    getData(FETCH_RESTAURANTS_LIST_URL);
-  }, []);
+  const isOnline = useOnline();
 
-  // func to fetch data from given URL
-  async function getData(url) {
-    const data = await fetch(url);
-    const json = await data.json();
-
-    const restaurantJson =
-      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
-        ?.restaurants;
-    const restaurantJsonInfo = restaurantJson.map(
-      (restaurant) => restaurant.info
-    );
-
-    setAllRestaurants(restaurantJsonInfo);
-    setViewRestaurants(restaurantJsonInfo);
+  if (!isOnline) {
+    return <h1>🔴 You are currently offline! Please reconnect.</h1>;
   }
 
   // conditional rendering
