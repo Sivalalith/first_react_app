@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import React from "react";
-import Profile from "./Profile";
+import UserContext from "../utils/UserContext";
 
 const About2 = () => {
   return (
@@ -30,6 +30,13 @@ class About extends React.Component {
         <h1>About Us page</h1>
         <h2>Welcome to the About Us page.</h2>
         <p>Here you can find info about us. Will update soon....🔜</p>
+        <UserContext.Consumer>
+          {({ user }) => (
+            <p>
+              {user.name}-{user.email}
+            </p>
+          )}
+        </UserContext.Consumer>
         <Outlet />
       </div>
     );

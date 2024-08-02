@@ -2,11 +2,13 @@ import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./ShimmerUI";
 import useRestaurantsList from "../utils/useRestaurantsList";
 import useOnline from "../utils/useOnline";
+import UserContext from "../utils/UserContext";
+import { useContext } from "react";
 
 // filter the restaurants to find one matching the 'searchInput'
 function filterData(searchInput, restaurants) {
   const filteredRestaurantList = restaurants.filter((restaurant) =>
-    restaurant.name.includes(searchInput)
+    restaurant?.name?.toLowerCase()?.includes(searchInput?.toLowerCase())
   );
   return filteredRestaurantList;
 }
@@ -27,12 +29,14 @@ const Body = () => {
     return <h1>🔴 You are currently offline! Please reconnect.</h1>;
   }
 
+  const { user, setUser } = useContext(UserContext);
+
   // conditional rendering
   if (allRestaurants.length === 0) {
     return (
       <>
         {/* search container */}
-        <div className="search-container">
+        <div className="mb-4">
           <input
             type="text"
             placeholder="Search"
@@ -40,6 +44,7 @@ const Body = () => {
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
+            className="mx-4 border-solid border-black"
           ></input>
           <button
             onClick={() => {
@@ -48,18 +53,20 @@ const Body = () => {
               // set the state - restaurants
               setViewRestaurants(data);
             }}
+            className="mx-4 border-solid px-2 py-1 bg-blue-600 rounded text-white"
           >
             Search
           </button>
         </div>
         {/* Shimmer UI (to be displayed before initial render -> for UX reasons) */}
+
         <Shimmer items={20} />
       </>
     );
   } else {
     return (
       <>
-        <div className="search-container">
+        <div className="mb-4">
           <input
             type="text"
             placeholder="Search"
@@ -67,6 +74,7 @@ const Body = () => {
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
+            className="mx-4 border-solid border-black"
           ></input>
           <button
             onClick={() => {
@@ -75,12 +83,20 @@ const Body = () => {
               // set the state - restaurants
               setViewRestaurants(data);
             }}
+            className="mx-4 border-solid px-2 py-1 bg-blue-600 rounded text-white"
           >
             Search
           </button>
+          <input
+            className="p-2"
+            value={user.name}
+            onChange={(e) => {
+              setUser({ name: e.target.value, email: "new@email.com" });
+            }}
+          ></input>
         </div>
         {/* restaurant cards */}
-        <div className="card-list">
+        <div className="flex flex-wrap">
           {viewRestaurants.length === 0 ? (
             <h1>No restaurants matched with your filter!</h1>
           ) : (

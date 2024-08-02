@@ -2,13 +2,16 @@ const Shimmer = ({ items }) => {
   const jsx = Array(items).fill();
 
   return (
-    <div className="card-list">
+    <div className="flex flex-wrap">
       {jsx.map((value, index) => (
-        <div className="card" key={index}>
-          <div style={{ height: "200px", backgroundColor: "#DEDEDE" }}></div>
-          <h4 style={{ height: "20px" }}></h4>
-          <h5 style={{ height: "18px" }}></h5>
-          <h5 style={{ height: "18px" }}></h5>
+        <div
+          className="w-[230px] h-[400px] m-[20px] rounded p-[10px] border-neutral-700 border-2"
+          key={index}
+        >
+          <div className="h-[50%] w-[100%] bg-gray-300"></div>
+          <h4></h4>
+          <h5></h5>
+          <h5></h5>
         </div>
       ))}
     </div>
