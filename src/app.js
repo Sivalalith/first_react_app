@@ -7,10 +7,14 @@ import About from "./components/About";
 import Contact from "./components/Contact";
 import Profile from "./components/Profile";
 import Error from "./components/Error";
+import Cart from "./components/Cart";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom"; // to configure routes for our app
 import RestaurantDetails from "./components/RestaurantDetails";
 import UserContext from "./utils/UserContext";
+import { Provider } from "react-redux"; // to "provide" access to our main redux store
+import store from "./utils/appStore"; // our main redux store
 
+// lazy-load the component only when required/called
 const Instamart = lazy(() => {
   return import("./components/Instamart");
 });
@@ -38,18 +42,21 @@ const Instamart = lazy(() => {
 
 // app layout component
 const AppLayout = () => {
+  // dummy user info
   const [user, setUser] = useState({
     name: "Lalith",
     email: "lalith@email.com",
   });
   return (
-    <>
+    // access to the redux store provided to entire app by enclosing the entire "app" within it
+    <Provider store={store}>
+      {/* passing user info to be available to required components without 'prop drilling' */}
       <UserContext.Provider value={{ user: user, setUser: setUser }}>
         <Header />
         <Outlet />
         <Footer />
       </UserContext.Provider>
-    </>
+    </Provider>
   );
 };
 
@@ -60,6 +67,7 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     errorElement: <Error />,
     children: [
+      //nested routing
       {
         path: "/",
         element: <Body />,
@@ -86,9 +94,14 @@ const router = createBrowserRouter([
         path: "instamart",
         element: (
           <Suspense fallback={<p>Loading... 🔃</p>}>
+            {/*fallback UI is displayed until the Instamart component is lazy-loaded */}
             <Instamart />
           </Suspense>
         ),
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
       },
     ],
   },
